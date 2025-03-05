@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrome 环境管理工具</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#85a5ff',
+            sidebar: {
+              light: '#f9fbff',
+              dark: '#212327'
+            },
+            content: {
+              light: '#ffffff',
+              dark: '#292a2d'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="dark:bg-content-dark bg-content-light">
+  <div class="flex h-screen overflow-hidden">
+    <!-- 侧边栏 -->
+    <div class="w-[68px] bg-sidebar-light dark:bg-sidebar-dark flex flex-col items-center py-4">
+      <!-- Logo -->
+      <div class="w-11 h-11 rounded-lg mb-8 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" class="text-primary"></circle>
+          <circle cx="12" cy="12" r="4" class="text-primary"></circle>
+          <line x1="21.17" y1="8" x2="12" y2="8" class="text-primary"></line>
+          <line x1="3.95" y1="6.06" x2="8.54" y2="14" class="text-primary"></line>
+          <line x1="10.88" y1="21.94" x2="15.46" y2="14" class="text-primary"></line>
+        </svg>
+      </div>
+
+      <!-- 菜单项 -->
+      <div class="flex flex-col items-center flex-1 relative">
+        <!-- 环境管理 -->
+        <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center bg-primary/10 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="4"></circle>
+            <line x1="21.17" y1="8" x2="12" y2="8"></line>
+            <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+            <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+          </svg>
+        </div>
+
+        <!-- 日志查看 -->
+        <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+
+        <!-- 代理管理 -->
+        <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+          </svg>
+        </div>
+
+        <!-- 设置 -->
+        <div class="w-8 h-8 rounded-lg absolute bottom-0 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="flex-1 overflow-auto p-6">
+      <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">环境管理</h1>
+        <p class="text-gray-500 dark:text-gray-400 mt-1">管理不同环境的 Chrome 实例和 Hosts 配置</p>
+      </div>
+
+      <!-- 操作栏 -->
+      <div class="flex justify-between mb-6">
+        <div class="flex space-x-2">
+          <button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            新增环境
+          </button>
+          <button class="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <polyline points="23 20 23 14 17 14"></polyline>
+              <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+            </svg>
+            刷新
+          </button>
+        </div>
+
+        <div class="flex items-center">
+          <div class="relative">
+            <input type="text" placeholder="搜索环境..." class="pl-9 pr-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 absolute left-3 top-3 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 环境列表 -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th scope="col" class="w-10 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"></th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">环境名称</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Host 状态</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">开启状态</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">操作</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <!-- 开发环境 -->
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 cursor-move" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                </svg>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900 dark:text-white">开发环境</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">https://dev.example.com</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                  正常
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
+                  开启
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                    移除
+                  </button>
+                  <button class="text-primary hover:text-primary/80">
+                    关闭
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 测试环境 -->
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 cursor-move" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                </svg>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900 dark:text-white">测试环境</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">https://test.example.com</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                  正常
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100">
+                  关闭
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                    移除
+                  </button>
+                  <button class="text-primary hover:text-primary/80">
+                    刷新
+                  </button>
+                  <button class="text-primary hover:text-primary/80">
+                    开启
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 预发布环境 -->
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 cursor-move" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                </svg>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900 dark:text-white">预发布环境</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">https://staging.example.com</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                  异常
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-800 dark:text-orange-100">
+                  关闭
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2">
+                  <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                    移除
+                  </button>
+                  <button class="text-primary hover:text-primary/80">
+                    刷新
+                  </button>
+                  <button class="text-primary hover:text-primary/80">
+                    开启
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 新增环境弹窗 -->
+      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md">
+          <div class="p-6">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">新增环境</h3>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">环境名称</label>
+                <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white" placeholder="请输入环境名称">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">环境链接</label>
+                <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white" placeholder="请输入环境链接 (http://...)">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">代理设置 (可选)</label>
+                <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white" placeholder="127.0.0.1:8080">
+              </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-3">
+              <button class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                取消
+              </button>
+              <button class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧面板 -->
+    <div class="w-80 bg-gray-50 dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700 p-4 overflow-auto">
+      <div class="mb-6">
+        <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-2">环境详情</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">开发环境</p>
+      </div>
+
+      <!-- 环境信息 -->
+      <div class="mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">基本信息</h3>
+            <button class="text-primary hover:text-primary/80 text-sm">编辑</button>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <p class="text-xs text-gray-500 dark:text-gray-400">环境 URL</p>
+              <p class="text-sm text-gray-900 dark:text-white">https://dev.example.com</p>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 dark:text-gray-400">代理设置</p>
+              <p class="text-sm text-gray-900 dark:text-white">127.0.0.1:8080</p>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 dark:text-gray-400">创建时间</p>
+              <p class="text-sm text-gray-900 dark:text-white">2023-06-15 14:30:25</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hosts 配置 -->
+      <div class="mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Hosts 配置</h3>
+            <button class="text-primary hover:text-primary/80 text-sm">编辑</button>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-gray-900 dark:text-white">192.168.1.100</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">api.example.com</p>
+            </div>
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-gray-900 dark:text-white">192.168.1.101</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">admin.example.com</p>
+            </div>
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-gray-900 dark:text-white">192.168.1.102</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">static.example.com</p>
+            </div>
+          </div>
+
+          <button class="mt-3 w-full px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-xs font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-primary">
+            添加 Host
+          </button>
+        </div>
+      </div>
+
+      <!-- 代理日志 -->
+      <div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">代理日志</h3>
+            <button class="text-primary hover:text-primary/80 text-sm">清空</button>
+          </div>
+
+          <div class="bg-gray-100 dark:bg-gray-900 rounded p-2 h-40 overflow-auto text-xs font-mono">
+            <p class="text-gray-600 dark:text-gray-400">[14:32:15] 代理服务器启动在 127.0.0.1:8080</p>
+            <p class="text-gray-600 dark:text-gray-400">[14:32:18] 请求: GET https://api.example.com/users</p>
+            <p class="text-green-600 dark:text-green-400">[14:32:18] 响应: 200 OK (124ms)</p>
+            <p class="text-gray-600 dark:text-gray-400">[14:32:25] 请求: POST https://api.example.com/auth</p>
+            <p class="text-green-600 dark:text-green-400">[14:32:26] 响应: 200 OK (312ms)</p>
+            <p class="text-gray-600 dark:text-gray-400">[14:33:01] 请求: GET https://static.example.com/assets/main.css</p>
+            <p class="text-green-600 dark:text-green-400">[14:33:01] 响应: 200 OK (45ms)</p>
+            <p class="text-gray-600 dark:text-gray-400">[14:33:02] 请求: GET https://static.example.com/assets/app.js</p>
+            <p class="text-green-600 dark:text-green-400">[14:33:02] 响应: 200 OK (78ms)</p>
+            <p class="text-gray-600 dark:text-gray-400">[14:33:10] 请求: GET https://api.example.com/products</p>
+            <p class="text-red-600 dark:text-red-400">[14:33:11] 响应: 404 Not Found (203ms)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 日志查看页面 -->
+  <div class="hidden h-screen overflow-hidden">
+    <div class="flex h-full">
+      <!-- 侧边栏 (与主页相同) -->
+      <div class="w-[68px] bg-sidebar-light dark:bg-sidebar-dark flex flex-col items-center py-4">
+        <!-- Logo -->
+        <div class="w-11 h-11 rounded-lg mb-8 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" class="text-primary"></circle>
+            <circle cx="12" cy="12" r="4" class="text-primary"></circle>
+            <line x1="21.17" y1="8" x2="12" y2="8" class="text-primary"></line>
+            <line x1="3.95" y1="6.06" x2="8.54" y2="14" class="text-primary"></line>
+            <line x1="10.88" y1="21.94" x2="15.46" y2="14" class="text-primary"></line>
+          </svg>
+        </div>
+
+        <!-- 菜单项 -->
+        <div class="flex flex-col items-center flex-1 relative">
+          <!-- 环境管理 -->
+          <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="21.17" y1="8" x2="12" y2="8"></line>
+              <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+              <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+            </svg>
+          </div>
+
+          <!-- 日志查看 -->
+          <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center bg-primary/10 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+
+          <!-- 代理管理 -->
+          <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+              <line x1="6" y1="6" x2="6.01" y2="6"></line>
+              <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+          </div>
+
+          <!-- 设置 -->
+          <div class="w-8 h-8 rounded-lg absolute bottom-0 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 主内容区 -->
+      <div class="flex-1 overflow-auto p-6">
+        <div class="mb-6">
+          <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">日志查看</h1>
+          <p class="text-gray-500 dark:text-gray-400 mt-1">查看所有环境的代理请求和系统日志</p>
+        </div>
+
+        <!-- 操作栏 -->
+        <div class="flex justify-between mb-6">
+          <div class="flex space-x-2">
+            <button class="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              清空日志
+            </button>
+            <button class="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <polyline points="23 20 23 14 17 14"></polyline>
+                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+              </svg>
+              刷新
+            </button>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <select class="px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+              <option>全部环境</option>
+              <option>开发环境</option>
+              <option>测试环境</option>
+              <option>预发布环境</option>
+            </select>
+            <select class="px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+              <option>全部级别</option>
+              <option>INFO</option>
+              <option>WARNING</option>
+              <option>ERROR</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 日志表格 -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">时间</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">环境</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">级别</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">消息</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <!-- 日志条目 -->
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">2023-06-15 14:32:15</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">开发环境</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
+                    INFO
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">代理服务器启动在 127.0.0.1:8080</td>
+              </tr>
+
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">2023-06-15 14:32:18</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">开发环境</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
+                    INFO
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">请求: GET https://api.example.com/users</td>
+              </tr>
+
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">2023-06-15 14:32:18</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">开发环境</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                    SUCCESS
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">响应: 200 OK (124ms)</td>
+              </tr>
+
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">2023-06-15 14:33:10</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">开发环境</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
+                    INFO
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">请求: GET https://api.example.com/products</td>
+              </tr>
+
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">2023-06-15 14:33:11</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">开发环境</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                    ERROR
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">响应: 404 Not Found (203ms)</td>
+              </tr>
+
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">2023-06-15 14:35:22</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">测试环境</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+                    WARNING
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">代理连接超时，正在重试...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 分页 -->
+        <div class="flex justify-between items-center mt-4">
+          <div class="text-sm text-gray-700 dark:text-gray-300">
+            显示 <span class="font-medium">1</span> 到 <span class="font-medium">10</span> 条，共 <span class="font-medium">45</span> 条
+          </div>
+          <div class="flex space-x-2">
+            <button class="px-3 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
+              上一页
+            </button>
+            <button class="px-3 py-1 rounded-md bg-primary text-white">
+              1
+            </button>
+            <button class="px-3 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
+              2
+            </button>
+            <button class="px-3 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
+              3
+            </button>
+            <button class="px-3 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
+              下一页
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设置页面 -->
+  <div class="hidden h-screen overflow-hidden">
+    <div class="flex h-full">
+      <!-- 侧边栏 (与主页相同) -->
+      <div class="w-[68px] bg-sidebar-light dark:bg-sidebar-dark flex flex-col items-center py-4">
+        <!-- Logo -->
+        <div class="w-11 h-11 rounded-lg mb-8 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" class="text-primary"></circle>
+            <circle cx="12" cy="12" r="4" class="text-primary"></circle>
+            <line x1="21.17" y1="8" x2="12" y2="8" class="text-primary"></line>
+            <line x1="3.95" y1="6.06" x2="8.54" y2="14" class="text-primary"></line>
+            <line x1="10.88" y1="21.94" x2="15.46" y2="14" class="text-primary"></line>
+          </svg>
+        </div>
+
+        <!-- 菜单项 -->
+        <div class="flex flex-col items-center flex-1 relative">
+          <!-- 环境管理 -->
+          <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="21.17" y1="8" x2="12" y2="8"></line>
+              <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+              <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+            </svg>
+          </div>
+
+          <!-- 日志查看 -->
+          <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+
+          <!-- 代理管理 -->
+          <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+              <line x1="6" y1="6" x2="6.01" y2="6"></line>
+              <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+          </div>
+
+          <!-- 设置 -->
+          <div class="w-8 h-8 rounded-lg absolute bottom-0 flex items-center justify-center bg-primary/10 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 主内容区 -->
+      <div class="flex-1 overflow-auto p-6">
+        <div class="mb-6">
+          <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">设置</h1>
+          <p class="text-gray-500 dark:text-gray-400 mt-1">配置应用程序的全局设置</p>
+        </div>
+
+        <!-- 设置卡片 -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mb-6">
+          <div class="p-6">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">基本设置</h2>
+
+            <!-- Chrome 路径设置 -->
+            <div class="mb-6">
+              <div class="flex justify-between items-center mb-2">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Chrome 可执行文件路径</label>
+              </div>
+              <div class="flex">
+                <input type="text" value="C:\Program Files\Google\Chrome\Application\chrome.exe" class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-l-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white" readonly>
+                <button class="px-4 py-2 border border-transparent rounded-r-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                  选择
+                </button>
+              </div>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Chrome 浏览器的可执行文件路径，用于启动浏览器实例</p>
+            </div>
+
+            <!-- 主题设置 -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">主题</label>
+              <div class="flex space-x-4">
+                <div class="flex items-center">
+                  <input type="radio" id="light-theme" name="theme" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600">
+                  <label for="light-theme" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    浅色
+                  </label>
+                </div>
+                <div class="flex items-center">
+                  <input type="radio" id="dark-theme" name="theme" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600" checked>
+                  <label for="dark-theme" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    深色
+                  </label>
+                </div>
+                <div class="flex items-center">
+                  <input type="radio" id="system-theme" name="theme" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600">
+                  <label for="system-theme" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    跟随系统
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 启动设置 -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">启动设置</label>
+              <div class="space-y-2">
+                <div class="flex items-center">
+                  <input type="checkbox" id="start-with-system" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600" checked>
+                  <label for="start-with-system" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    开机自启动
+                  </label>
+                </div>
+                <div class="flex items-center">
+                  <input type="checkbox" id="start-minimized" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600" checked>
+                  <label for="start-minimized" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    启动时最小化到系统托盘
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 代理设置卡片 -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mb-6">
+          <div class="p-6">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">代理设置</h2>
+
+            <!-- 默认代理端口 -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">默认代理端口</label>
+              <input type="number" value="8080" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">内置代理服务器的默认端口，每个环境可以单独配置</p>
+            </div>
+
+            <!-- 日志设置 -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">日志设置</label>
+              <div class="space-y-2">
+                <div class="flex items-center">
+                  <input type="checkbox" id="log-requests" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600" checked>
+                  <label for="log-requests" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    记录所有请求
+                  </label>
+                </div>
+                <div class="flex items-center">
+                  <input type="checkbox" id="log-responses" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600" checked>
+                  <label for="log-responses" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    记录所有响应
+                  </label>
+                </div>
+                <div class="flex items-center">
+                  <input type="checkbox" id="log-errors" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600" checked>
+                  <label for="log-errors" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    记录错误和警告
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 最大日志行数 -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">最大日志行数</label>
+              <input type="number" value="1000" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">内存中保存的最大日志行数，超过此数量将删除最早的日志</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 环境标签设置卡片 -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mb-6">
+          <div class="p-6">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">环境标签设置</h2>
+
+            <!-- 标签位置 -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">标签位置</label>
+              <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
+                <option>左下角</option>
+                <option>右下角</option>
+                <option>左上角</option>
+                <option>右上角</option>
+              </select>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">环境标签在浏览器中的显示位置</p>
+            </div>
+
+            <!-- 标签样式 -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">标签样式</label>
+              <div class="grid grid-cols-4 gap-4">
+                <div class="border border-gray-300 dark:border-gray-600 rounded-md p-2 flex items-center justify-center bg-red-500 text-white text-sm">
+                  开发环境
+                </div>
+                <div class="border border-gray-300 dark:border-gray-600 rounded-md p-2 flex items-center justify-center bg-green-500 text-white text-sm">
+                  测试环境
+                </div>
+                <div class="border border-gray-300 dark:border-gray-600 rounded-md p-2 flex items-center justify-center bg-blue-500 text-white text-sm">
+                  预发布环境
+                </div>
+                <div class="border border-gray-300 dark:border-gray-600 rounded-md p-2 flex items-center justify-center bg-purple-500 text-white text-sm">
+                  生产环境
+                </div>
+              </div>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">点击选择标签样式，可以为不同环境设置不同颜色</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 数据管理卡片 -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+          <div class="p-6">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">数据管理</h2>
+
+            <!-- 数据导入导出 -->
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">数据备份与恢复</label>
+              <div class="flex space-x-2">
+                <button class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                  导出配置
+                </button>
+                <button class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                  导入配置
+                </button>
+              </div>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">导出或导入所有环境配置和应用设置</p>
+            </div>
+
+            <!-- 清除数据 -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">清除数据</label>
+              <div class="space-y-2">
+                <button class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                  清除所有日志
+                </button>
+                <button class="w-full px-4 py-2 border border-red-300 dark:border-red-700 rounded-md shadow-sm text-sm font-medium text-red-700 dark:text-red-300 bg-white dark:bg-gray-700 hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                  重置所有设置
+                </button>
+              </div>
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">清除应用数据，重置将删除所有环境配置</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hosts 编辑页面 -->
+  <div class="hidden h-screen overflow-hidden">
+    <div class="flex h-full">
+      <!-- 侧边栏 (与主页相同) -->
+      <div class="w-[68px] bg-sidebar-light dark:bg-sidebar-dark flex flex-col items-center py-4">
+        <!-- Logo -->
+        <div class="w-11 h-11 rounded-lg mb-8 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" class="text-primary"></circle>
+            <circle cx="12" cy="12" r="4" class="text-primary"></circle>
+            <line x1="21.17" y1="8" x2="12" y2="8" class="text-primary"></line>
+            <line x1="3.95" y1="6.06" x2="8.54" y2="14" class="text-primary"></line>
+            <line x1="10.88" y1="21.94" x2="15.46" y2="14" class="text-primary"></line>
+          </svg>
+        </div>
+
+        <!-- 菜单项 -->
+        <div class="flex flex-col items-center flex-1 relative">
+          <!-- 环境管理 -->
+          <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center bg-primary/10 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="21.17" y1="8" x2="12" y2="8"></line>
+              <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+              <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+            </svg>
+          </div>
+
+          <!-- 日志查看 -->
+          <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+
+          <!-- 代理管理 -->
+          <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+              <line x1="6" y1="6" x2="6.01" y2="6"></line>
+              <line x1="6" y1="18" x2="6.01" y2="18"></line>
+            </svg>
+          </div>
+
+          <!-- 设置 -->
+          <div class="w-8 h-8 rounded-lg absolute bottom-0 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 主内容区 -->
+      <div class="flex-1 overflow-auto p-6">
+        <div class="mb-6">
+          <div class="flex items-center">
+            <button class="mr-2 p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">编辑 Hosts 配置</h1>
+          </div>
+          <p class="text-gray-500 dark:text-gray-400 mt-1">开发环境 - https://dev.example.com</p>
+        </div>
+
+        <!-- 操作栏 -->
+        <div class="flex justify-between mb-6">
+          <div class="flex space-x-2">
+            <button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              添加 Host
+            </button>
+            <button class="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              导入
+            </button>
+            <button class="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              导出
+            </button>
+          </div>
+
+          <div class="flex items-center">
+            <div class="relative">
+              <input type="text" placeholder="搜索 Host..." class="pl-9 pr-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 absolute left-3 top-3 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hosts 表格 -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th scope="col" class="w-10 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">IP 地址</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">域名</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">状态</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">操作</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <!-- Host 条目 -->
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 cursor-move" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                  </svg>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">192.168.1.100</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">api.example.com</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="h-4 w-4 rounded-full bg-green-400"></div>
+                    <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">已启用</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <button class="text-primary hover:text-primary/80">
+                      编辑
+                    </button>
+                    <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                      删除
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 cursor-move" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                      </svg>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">192.168.1.101</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">admin.example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="h-4 w-4 rounded-full bg-green-400"></div>
+                        <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">已启用</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex space-x-2">
+                        <button class="text-primary hover:text-primary/80">
+                          编辑
+                        </button>
+                        <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                          删除
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 cursor-move" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                      </svg>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">192.168.1.102</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">static.example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="h-4 w-4 rounded-full bg-gray-400"></div>
+                        <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">已禁用</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex space-x-2">
+                        <button class="text-primary hover:text-primary/80">
+                          编辑
+                        </button>
+                        <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                          删除
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 cursor-move" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                      </svg>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">192.168.1.103</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">auth.example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="h-4 w-4 rounded-full bg-green-400"></div>
+                        <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">已启用</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex space-x-2">
+                        <button class="text-primary hover:text-primary/80">
+                          编辑
+                        </button>
+                        <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                          删除
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- 添加 Host 弹窗 -->
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md">
+                <div class="p-6">
+                  <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">添加 Host</h3>
+
+                  <div class="space-y-4">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">IP 地址</label>
+                      <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white" placeholder="例如: 192.168.1.100">
+                    </div>
+
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">域名</label>
+                      <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white" placeholder="例如: example.com">
+                    </div>
+
+                    <div class="flex items-center">
+                      <input type="checkbox" id="host-enabled" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-gray-600" checked>
+                      <label for="host-enabled" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                        启用
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="mt-6 flex justify-end space-x-3">
+                    <button class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                      取消
+                    </button>
+                    <button class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                      确定
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 代理管理页面 -->
+      <div class="hidden h-screen overflow-hidden">
+        <div class="flex h-full">
+          <!-- 侧边栏 (与主页相同) -->
+          <div class="w-[68px] bg-sidebar-light dark:bg-sidebar-dark flex flex-col items-center py-4">
+            <!-- Logo -->
+            <div class="w-11 h-11 rounded-lg mb-8 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" class="text-primary"></circle>
+                <circle cx="12" cy="12" r="4" class="text-primary"></circle>
+                <line x1="21.17" y1="8" x2="12" y2="8" class="text-primary"></line>
+                <line x1="3.95" y1="6.06" x2="8.54" y2="14" class="text-primary"></line>
+                <line x1="10.88" y1="21.94" x2="15.46" y2="14" class="text-primary"></line>
+              </svg>
+            </div>
+
+            <!-- 菜单项 -->
+            <div class="flex flex-col items-center flex-1 relative">
+              <!-- 环境管理 -->
+              <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <line x1="21.17" y1="8" x2="12" y2="8"></line>
+                  <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+                  <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+                </svg>
+              </div>
+
+              <!-- 日志查看 -->
+              <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
+
+              <!-- 代理管理 -->
+              <div class="w-8 h-8 rounded-lg mb-4 flex items-center justify-center bg-primary/10 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                  <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                  <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                  <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                </svg>
+              </div>
+
+              <!-- 设置 -->
+              <div class="w-8 h-8 rounded-lg absolute bottom-0 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- 主内容区 -->
+          <div class="flex-1 overflow-auto p-6">
+            <div class="mb-6">
+              <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">代理管理</h1>
+              <p class="text-gray-500 dark:text-gray-400 mt-1">管理和监控代理服务器</p>
+            </div>
+
+            <!-- 代理状态卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <!-- 活跃代理 -->
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div class="flex items-center">
+                  <div class="p-3 rounded-full bg-green-100 dark:bg-green-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                    </svg>
+                  </div>
+                  <div class="ml-4">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">1</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">活跃代理</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 总请求数 -->
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div class="flex items-center">
+                  <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                  </div>
+                  <div class="ml-4">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">128</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">总请求数</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 错误率 -->
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div class="flex items-center">
+                  <div class="p-3 rounded-full bg-red-100 dark:bg-red-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div class="ml-4">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">2.3%</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">错误率</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 代理服务器列表 -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mb-6">
+              <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">代理服务器</h3>
+              </div>
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">环境</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">地址</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">状态</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">请求数</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">操作</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <!-- 代理服务器条目 -->
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">开发环境</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">127.0.0.1:8080</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                        运行中
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">128</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex space-x-2">
+                        <button class="text-primary hover:text-primary/80">
+                          查看日志
+                        </button>
+                        <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                          停止
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">测试环境</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">127.0.0.1:8081</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                        已停止
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">0</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex space-x-2">
+                        <button class="text-primary hover:text-primary/80">
+                          查看日志
+                        </button>
+                        <button class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
+                          启动
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- 代理规则配置 -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+              <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white">代理规则</h3>
+                <button class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                  添加规则
+                </button>
+              </div>
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">名称</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">匹配模式</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">目标</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">状态</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">操作</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <!-- 代理规则条目 -->
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">API 重定向</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">https://api.example.com/*</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">http://localhost:3000</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                        已启用
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex space-x-2">
+                        <button class="text-primary hover:text-primary/80">
+                          编辑
+                        </button>
+                        <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                          删除
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">静态资源</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">https://static.example.com/*</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">http://localhost:8000</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                        已禁用
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex space-x-2">
+                        <button class="text-primary hover:text-primary/80">
+                          编辑
+                        </button>
+                        <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                          删除
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 系统托盘菜单 (模拟) -->
+      <div class="hidden fixed bottom-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg w-64 overflow-hidden z-50">
+        <div class="p-3 bg-gray-100 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="21.17" y1="8" x2="12" y2="8"></line>
+              <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
+              <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+            </svg>
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Chrome 环境管理器</span>
+          </div>
+        </div>
+
+        <div class="p-2">
+          <div class="text-xs font-medium text-gray-500 dark:text-gray-400 px-2 py-1">环境</div>
+
+          <div class="mt-1 space-y-1">
+            <div class="flex items-center px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+              <div class="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+              <span class="text-sm text-gray-700 dark:text-gray-300">开发环境</span>
+            </div>
+
+            <div class="flex items-center px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+              <div class="w-2 h-2 rounded-full bg-gray-300 mr-2"></div>
+              <span class="text-sm text-gray-700 dark:text-gray-300">测试环境</span>
+            </div>
+
+            <div class="flex items-center px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+              <div class="w-2 h-2 rounded-full bg-gray-300 mr-2"></div>
+              <span class="text-sm text-gray-700 dark:text-gray-300">预发布环境</span>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-200 dark:border-gray-600 my-2"></div>
+
+          <div class="mt-1 space-y-1">
+            <div class="flex items-center px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+              <span class="text-sm text-gray-700 dark:text-gray-300">显示主窗口</span>
+            </div>
+
+            <div class="flex items-center px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+              <span class="text-sm text-gray-700 dark:text-gray-300">退出</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
